@@ -1,0 +1,103 @@
+---
+- name: Create authorization profile in Cisco ISE
+  hosts: ISE2
+  connection: local
+
+  vars:
+    ise_base_url: "https://150.1.7.111/ers/config"
+    ise_username: "admin"
+    ise_password: "Cisco123"
+    authz_profile_name: "AUTH_ansible"
+    vlan_id: 308
+    acl_id: AnsibleACL
+    endpoint_type: "Any"
+    authz_profile_description: My authorization profile creating throw ansible tower  
+  
+  tasks:
+    - name: Get endpoint type ID
+      uri:
+        url: "{{ ise_base_url }}/endpoint/type"
+        method: GET
+        user: "{{ ise_username }}"
+        password: "{{ ise_password }}"
+        validate_certs: no
+        return_content: yes
+      register: endpoint_type_response
+
+    - name: Extract endpoint type ID
+      set_fact:
+        endpoint_type_id: "{{ (endpoint_type_response.json | selectattr('name', 'equalto', endpoint_type) | list)[0].id }}"
+    
+    - name: Create authorization profile
+      uri:
+        url: "{{ ise_base_url }}/authorizationprofile"
+        method: POST
+        user: "{{ ise_username }}"
+        password: "{{ ise_password }}"
+        headers:
+          Content-Type: "application/json"
+        body: |
+          {
+            "AuthorizationProfile":
+            {
+              "name": "{{ authz_profile_name }}",
+              "description": "{{ authz_profile_description }}",
+              "vlan": "{{ vlan_id }}",
+              "acl": "{{ acl_id }}",
+              "profileType": "Authorization",
+              "accessType": "ACCESS_ACCEPT",
+              "serviceTemplate": {
+                "id": "00000000-1111-2222-3333-444444444444"
+              },
+              "vlanTagged": true,
+              "vlanId": "{{ vlan_id }}",
+              "groupTagged": false,
+              "daclTagged": true,
+              "daclId": "{{ acl_id }}",
+              "serviceTagged": true,
+              "trackMethod": "NONE",
+              "advancedAttributes": {
+                "AdvancedAttribute": [
+                  {
+                    "name": "cisco-av-pair",
+                    "value": "{{ 'ip:sub-qos-policy-out=QOS_POLICY_NAME' }}"
+                  },
+                  {
+                    "name": "cisco-av-pair",
+                    "value": "{{ 'ip:qos-policy-out=QOS_POLICY_NAME' }}"
+                  },
+                  {
+                    "name": "cisco-av-pair",
+                    "value": "{{ 'ip:sub-qos-policy-in=QOS_POLICY_NAME' }}"
+                  },
+                  {
+                    "name": "cisco-av-pair",
+                    "value": "{{ 'ip:qos-policy-in=QOS_POLICY_NAME' }}"
+                  }
+                ]
+              },
+              "condition": {
+                "Endpoints": [
+                  {
+                    "groupId": "00000000-1111-2222-3333-444444444444",
+                    "identityStore": {
+                      "name": "Internal Users"
+                    },
+                    "identitySource": {
+                      "name": "Internal Users"
+                    },
+                    "identityType": "USER",
+                    "identity": "{{ endpoint_type_id }}"
+                  }
+                ]
+              }
+            }
+          }
+        validate_certs: no
+        status_code: 201
+        return_content: yes
+      register: result
+      
+    - name: Print result
+      debug:
+        var: result---
