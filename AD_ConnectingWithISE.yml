@@ -1,0 +1,54 @@
+---
+- name: Configure Cisco ISE to use Active Directory
+  hosts: ISE2
+  connection: local
+
+  vars:
+    ise_host: "150.1.7.111"
+    ise_base_url: "https://{{ ise_host }}/ers/config"
+    ise_username: "admin"
+    ise_password: "Cisc0123"
+    ad_domain_name: "pfe.lab"
+    ad_service_account_username: "Administrator"
+    ad_service_account_password: "P@ssw0rd"
+    
+
+  tasks:
+    - name: Configure Active Directory Integration
+      uri:
+        url: "{{ ise_base_url }}/adintegration"
+        method: PUT
+        user: "{{ ise_username }}"
+        password: "{{ ise_password }}"
+        headers:
+          Content-Type: "application/json"
+        body: |
+          {
+            "AdIntegration": {
+              "name": "{{ ad_domain_name }}",
+              "domain": "{{ ad_domain_name }}",
+              "enableDomainWhiteList": false,
+              "enableDomainAdminGroupMapping": true,
+              "enableDomainAdminNetBIOSNameMapping": false,
+              "enableDomainAdminSAMNameMapping": false,
+              "serviceAccount": {
+                "username": "{{ ad_service_account_username }}",
+                "password": "{{ ad_service_account_password }}",
+                "confirmPassword": "{{ ad_service_account_password }}"
+              },
+              "testConnection": true
+            }
+          }
+        validate_certs: no
+        status_code: 200
+        return_content: yes
+      register: result
+
+    - name: Verify result
+      fail:
+        msg: "Failed to configure Active Directory integration"
+      when: result.status != 200
+
+    - name: Print result
+      debug:
+        var: result
