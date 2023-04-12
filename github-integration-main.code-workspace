@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../cyberscribe_ansible-github-integration-main"
+		},
+		{
+			"name": "Cisco-ISE-Automation",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
