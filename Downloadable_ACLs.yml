@@ -1,0 +1,39 @@
+---
+- name: Create Downloadable ACL on Cisco ISE
+  hosts: ISE2
+  gather_facts: no
+  vars:
+    ise_host: "150.1.7.111"
+    ise_port: "9060"
+    ise_username: "admin"
+    ise_password: "Cisc0123"
+    ise_verify_ssl: no
+    dacL_config: |
+      <SgtAcl>
+        <name>My DACL</name>
+        <aclcontent>
+          permit ip any any
+          permit tcp host 10.1.1.1 eq 80 host 192.168.1.1 eq 8080
+        </aclcontent>
+      </SgtAcl>
+  tasks:
+    - name: Create DACL on Cisco ISE
+      iosxr_restconf:
+        host: "{{ ise_host }}"
+        port: "{{ ise_port }}"
+        username: "{{ ise_username }}"
+        password: "{{ ise_password }}"
+        verify_ssl: no
+        headers:
+          Content-Type: "application/vnd.com.cisco.ise.policy.sgt.1.0+xml"
+        url: "/ers/config/sgtAcl"
+        method: "POST"
+        body: 
+         name: "DACL_Ansible"
+        description: "{{ dacl_description }}"
+        aclcontent: "{{ dacl_config }}"
+        register: result
+
+    - name: Print result
+      debug:
+        var: result
