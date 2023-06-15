@@ -1,0 +1,22 @@
+---
+- name: Generate FMC API access token
+  hosts: webservers
+  connection : httpapi
+  become: false
+  gather_facts: no
+  vars:
+    credentials: "admin:Cisc0123"
+  tasks:
+    - name: Get Devices
+      ansible.builtin.uri:
+        url: "https://150.1.7.111:9060/ers/config/networkdevice"
+        method: GET
+        validate_certs: no
+        headers:
+          Authorization: "Basic {{ credentials | b64encode }}"
+          Accept: "application/json"
+      register: Devices
+
+    - name: Display Devices
+      debug:
+        var: Devices.json
