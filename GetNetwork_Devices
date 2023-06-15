@@ -5,7 +5,7 @@
   become: false
   gather_facts: no
   vars:
-    credentials: "admin:Cisc0123"
+    credentials: "admin:Cisc0123_"
   tasks:
     - name: Get Devices
       ansible.builtin.uri:
