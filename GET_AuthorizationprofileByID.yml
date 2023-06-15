@@ -19,7 +19,9 @@
 
     - name: Search for Authorization Profile ID
       set_fact:
-        auth_profile_id: "{{ profiles.json.SearchResult.resources | selectattr('name', 'equalto', profile_name) | map(attribute='id') | first }}"
+        auth_profile_id: "{{ item.id }}"
+      loop: "{{ profiles.json.SearchResult.resources }}"
+      when: item.name == profile_name
 
     - name: Debug Authorization Profile ID
       debug:
