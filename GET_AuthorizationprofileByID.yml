@@ -1,0 +1,39 @@
+---
+- name: GET Authorization Profile
+  hosts: webservers
+  connection: httpapi
+  become: false
+  gather_facts: no
+  vars:
+    credentials: "admin:Cisc0123_"
+    profile_name: "MyAuthorizationProfile"  # Replace with the name of the authorization profile
+  tasks:
+    - name: GET Authorization Profile
+      ansible.builtin.uri:
+        url: "https://admin:Cisc0123_@150.1.7.111:9060/ers/config/authorizationprofile"
+        method: GET
+        validate_certs: no
+        headers:
+          Accept: "application/json"
+      register: profiles
+
+    - name: Search for Authorization Profile ID
+      set_fact:
+        auth_profile_id: "{{ profiles.json.SearchResult.resources | selectattr('name', 'equalto', profile_name) | map(attribute='id') | first }}"
+
+    - name: Debug Authorization Profile ID
+      debug:
+        var: auth_profile_id
+
+    - name: GET Authorization Profile by ID
+      ansible.builtin.uri:
+        url: "https://admin:Cisc0123_@150.1.7.111:9060/ers/config/authorizationprofile/{{ auth_profile_id }}"
+        method: GET
+        validate_certs: no
+        headers:
+          Accept: "application/json"
+      register: auth_profile
+
+    - name: Display Authorization Profile
+      debug:
+        var: auth_profile.json
