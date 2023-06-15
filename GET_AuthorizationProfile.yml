@@ -1,0 +1,19 @@
+---
+- name: GET Authorization Profile
+  hosts: webservers
+  connection : httpapi
+  become: false
+  gather_facts: no
+  tasks:
+    - name: GET Authorization Profile
+      ansible.builtin.uri:
+        url: "https://admin:Cisc0123_@150.1.7.111:9060/ers/config/authorizationprofile"
+        method: GET
+        validate_certs: no
+        headers:
+          Accept: "application/json"
+      register: profile
+
+    - name: Display profile
+      debug:
+        var: profile.json
