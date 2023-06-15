@@ -6,7 +6,7 @@
   gather_facts: no
   vars:
     credentials: "admin:Cisc0123_"
-    profile_name: "MyAuthorizationProfile"  # Replace with the name of the authorization profile
+    profile_name: "Auth_ASAv1"  # Replace with the name of the authorization profile
   tasks:
     - name: GET Authorization Profile
       ansible.builtin.uri:
