@@ -1,4 +1,3 @@
----
 - name: Configure Cisco ISE to use Active Directory
   hosts: ISE2
   connection: local
@@ -7,7 +6,7 @@
     ise_host: "150.1.7.111"
     ise_base_url: "https://{{ ise_host }}/ers/config"
     ise_username: "admin"
-    ise_password: "Cisc0123"
+    ise_password: "Cisc0123_"
     ad_domain_name: "pfe.lab"
     ad_service_account_username: "Administrator"
     ad_service_account_password: "P@ssw0rd"
