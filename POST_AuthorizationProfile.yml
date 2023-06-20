@@ -1,0 +1,36 @@
+- name: POST Authorized Profile
+  hosts: webservers
+  connection: httpapi
+  become: false
+  gather_facts: no
+  tasks:
+    - name: Create Authorized Profile
+      ansible.builtin.uri:
+        url: "https://admin:Cisc0123_@150.1.7.111:9060/ers/config/authorizationprofile"
+        method: POST
+        validate_certs: no
+        headers:
+          Accept: "application/json"
+          Content-Type: "application/json"
+        body:
+          AuthorizationProfile:
+            id: ""
+            name: "test"
+            advancedAttributes:
+              - leftHandSideDictionaryAttribue:
+                  AdvancedAttributeValueType: "AdvancedDictionaryAttribute"
+                  dictionaryName: "Cisco"
+                  attributeName: "cisco-call-filter"
+                rightHandSideAttribueValue:
+                  AdvancedAttributeValueType: "AttributeValue"
+                  value: "23"
+            accessType: "ACCESS_ACCEPT"
+            authzProfileType: "SWITCH"
+            reauth:
+              timer: 1800
+              connectivity: "RADIUS_REQUEST"
+      register: created_profile
+
+    - name: Display created profile
+      debug:
+        var: created_profile.json
