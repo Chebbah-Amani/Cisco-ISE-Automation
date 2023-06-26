@@ -1,5 +1,5 @@
 - name: Create network device in Cisco ISE
-  hosts: localhost
+  hosts: webserver
   gather_facts: no
   vars:
     ise_username: admin
