@@ -6,9 +6,9 @@
   vars:
     ise_username: admin
     ise_password: Cisc0123
-    ise_base_url: https://150.1.7.111:9060/ers/config
-    network_device_name: test_device
-    network_device_ip: 192.168.0.0
+    ise_base_url: https://admin:Cisc0123_@150.1.7.111:9060/ers/config
+    network_device_name: test_device_ansible
+    network_device_ip: 192.168.1.1
     network_device_mask: 16
     network_device_type: CiscoSwitch
     network_device_shared_secret: Cisco123
@@ -49,12 +49,12 @@
       uri:
         url: "{{ ise_base_url }}/networkdevice"
         method: POST
+        validate_certs: no
         headers:
           Content-Type: "application/json"
+          Accept: "application/json"
         body: "{{ json_body }}"
-        validate_certs: no
-        user: "{{ ise_username }}"
-        password: "{{ ise_password }}"
+        status_code: 201
       register: create_device_result
 
     - name: Print create device result
