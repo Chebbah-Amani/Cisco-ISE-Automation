@@ -41,6 +41,11 @@
               "mask": 16
                  }
                  ],
+          "NetworkDeviceGroupList": [
+                "Location#All Locations",
+                "IPSEC#Is IPSEC Device#No",
+                "Device Type#All Device Types"
+              ]
                }
             }
        status_code: 201
