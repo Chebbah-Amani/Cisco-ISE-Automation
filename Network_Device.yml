@@ -24,7 +24,7 @@
            '{
         "NetworkDevice": {
           "name": "test_device",
-          "description": "testing device",
+          "description": "Ansible_device",
           "modelName": "3650",
           "authenticationSettings": {
             "networkProtocol": "RADIUS",
@@ -37,7 +37,7 @@
           "coaPort": 1700,
           "NetworkDeviceIPList": [
             {
-              "ipaddress": "192.168.0.0",
+              "ipaddress": "192.168.1.1",
               "mask": 16
                  }
                  ],
@@ -51,5 +51,5 @@
        status_code: 201
       register: create_device_result
     - name: Print create device result
-      debug:
+      ansible.builtin.debug:
         var: create_device_result.json
