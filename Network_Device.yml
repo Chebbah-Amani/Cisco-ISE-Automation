@@ -13,36 +13,37 @@
   tasks:
     - name: Create network device
       ansible.builtin.uri:
-        url: "{{ ise_base_url }}/networkdevice"
-        method: POST
-        validate_certs: no
-        headers:
+       url: "{{ ise_base_url }}/networkdevice"
+       method: POST
+       validate_certs: no
+       headers:
           Content-Type: "application/json"
           Accept: "application/json"
-        body_format: json
-        body:
-           '{
-             "NetworkDevice": {
-                 "name": "test_device_ansible",
-                 "description": "testing device",
-                 "modelName": "3650",
-                 "authenticationSettings": {
-                    "networkProtocol": "RADIUS",
-                    "radiusSharedSecret": "Cisco123",
-                    "enableKeyWrap": false,
-                    "keyEncryptionKey": "",
-                    "keyInputFormat": "ASCII"
-                       },
-                 "profileName": "Cisco",
-                 "coaPort": 1700,
-                 "NetworkDeviceIPList": [
-             {
-                "ipaddress": "192.168.40.0",
-                "mask": 16
-             } ],
-             }
-           }'
-        status_code: 201
+       body_format: json
+       body:
+           {
+        "NetworkDevice": {
+          "name": "test_device",
+          "description": "testing device",
+          "modelName": "3650",
+          "authenticationSettings": {
+            "networkProtocol": "RADIUS",
+            "radiusSharedSecret": "Cisco123",
+            "enableKeyWrap": false,
+            "keyEncryptionKey": "",
+            "keyInputFormat": "ASCII"
+          },
+          "profileName": "Cisco",
+          "coaPort": 1700,
+          "NetworkDeviceIPList": [
+            {
+              "ipaddress": "192.168.0.0",
+              "mask": 16
+                 }
+                 ],
+               }
+            }
+       status_code: 201
       register: create_device_result
     - name: Print create device result
       debug:
