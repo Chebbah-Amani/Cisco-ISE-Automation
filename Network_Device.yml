@@ -23,8 +23,8 @@
        body:
            '{
         "NetworkDevice": {
-          "name": "test_device",
-          "description": "Ansible_device",
+          "name": "ADevice",
+          "description": "Device created by running Ansible playbook ",
           "modelName": "3650",
           "authenticationSettings": {
             "networkProtocol": "RADIUS",
