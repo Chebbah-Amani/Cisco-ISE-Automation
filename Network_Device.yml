@@ -21,7 +21,7 @@
           Accept: "application/json"
        body_format: json
        body:
-           {
+           '{
         "NetworkDevice": {
           "name": "test_device",
           "description": "testing device",
@@ -47,7 +47,7 @@
                 "Device Type#All Device Types"
               ]
                }
-            }
+            }'
        status_code: 201
       register: create_device_result
     - name: Print create device result
