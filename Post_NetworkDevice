@@ -1,0 +1,60 @@
+- name: Create network device in Cisco ISE
+  hosts: localhost
+  gather_facts: no
+  vars:
+    ise_username: admin
+    ise_password: Cisc0123
+    ise_base_url: https://150.1.7.111:9060/ers/config
+    network_device_name: test_device
+    network_device_ip: 192.168.0.0
+    network_device_mask: 16
+    network_device_type: CiscoSwitch
+    network_device_shared_secret: Cisco123
+
+  tasks:
+    - name: Generate JSON body
+      set_fact:
+        json_body: |
+          {
+            "NetworkDevice": {
+              "name": "{{ network_device_name }}",
+              "description": "testing device",
+              "modelName": "3650",
+              "authenticationSettings": {
+                "networkProtocol": "RADIUS",
+                "radiusSharedSecret": "{{ network_device_shared_secret }}",
+                "enableKeyWrap": false,
+                "keyEncryptionKey": "",
+                "keyInputFormat": "ASCII"
+              },
+              "profileName": "Cisco",
+              "coaPort": 1700,
+              "NetworkDeviceIPList": [
+                {
+                  "ipaddress": "{{ network_device_ip }}",
+                  "mask": {{ network_device_mask }}
+                }
+              ],
+              "NetworkDeviceGroupList": [
+                "Location#All Locations",
+                "IPSEC#Is IPSEC Device#No",
+                "Device Type#All Device Types"
+              ]
+            }
+          }
+
+    - name: Create network device
+      uri:
+        url: "{{ ise_base_url }}/networkdevice"
+        method: POST
+        headers:
+          Content-Type: "application/json"
+        body: "{{ json_body }}"
+        validate_certs: no
+        user: "{{ ise_username }}"
+        password: "{{ ise_password }}"
+      register: create_device_result
+
+    - name: Print create device result
+      debug:
+        var: create_device_result.json
