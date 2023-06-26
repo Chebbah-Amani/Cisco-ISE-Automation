@@ -37,7 +37,7 @@
           "coaPort": 1700,
           "NetworkDeviceIPList": [
             {
-              "ipaddress": "192.168.1.1",
+              "ipaddress": "192.168.1.15",
               "mask": 16
                  }
                  ],
