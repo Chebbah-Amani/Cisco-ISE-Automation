@@ -1,5 +1,7 @@
 - name: Create network device in Cisco ISE
   hosts: webservers
+  connection: httpapi
+  become: false
   gather_facts: no
   vars:
     ise_username: admin
