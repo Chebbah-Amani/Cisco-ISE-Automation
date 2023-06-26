@@ -1,46 +1,48 @@
 ---
 - name: Create network device in Cisco ISE
-  hosts: ISE2
+  hosts: webservers
+  connection: httpapi
+  become: false
   gather_facts: no
   vars:
-    ise_username: admin
-    ise_password: Cisc0123
-    ise_base_url: https://150.1.7.111:9060/ers/config
-    network_device_name: my-switch
-    network_device_ip: 150.1.7.7
-    network_device_type: CiscoSwitch
-    network_device_shared_secret: Cisco123
+    ise_base_url: https://admin:Cisc0123_@150.1.7.111:9060/ers/config
+    #network_device_name: my-switch
+    #network_device_ip: 150.1.7.7
+    #network_device_type: CiscoSwitch
+    #network_device_shared_secret: Cisco123
   tasks:
-    - name: Get ISE token
-      uri:
-        url: "{{ ise_base_url }}/login"
-        method: POST
-        headers:
-          Content-Type: "application/json"
-        body:
-          username: "{{ ise_username }}"
-          password: "{{ ise_password }}"
-      register: ise_login_result
     - name: Create network device
-      uri:
+      ansible.builtin.uri:
         url: "{{ ise_base_url }}/networkdevice"
         method: POST
+        validate_certs: no
         headers:
           Content-Type: "application/json"
-          Authorization: "Bearer {{ ise_login_result.json.ERS.token }}"
+          Accept: "application/json"
+        body_format: json
         body:
-          name: "{{ network_device_name }}"
-          ipAddress: "{{ network_device_ip }}"
-          networkDeviceGroups: [
-            {
-              name: "All Device Types"
-            }
-          ]
-          networkDeviceType: "{{ network_device_type }}"
-          authenticationSettings: {
-            enableKeyWrap: true,
-            sharedSecret: "{{ network_device_shared_secret }}"
-          }
+           '{
+             "NetworkDevice": {
+                 "name": "test_device_ansible",
+                 "description": "testing device",
+                 "modelName": "3650",
+                 "authenticationSettings": {
+                    "networkProtocol": "RADIUS",
+                    "radiusSharedSecret": "Cisco123",
+                    "enableKeyWrap": false,
+                    "keyEncryptionKey": "",
+                    "keyInputFormat": "ASCII"
+                       },
+                 "profileName": "Cisco",
+                 "coaPort": 1700,
+                 "NetworkDeviceIPList": [
+             {
+                "ipaddress": "192.168.40.0",
+                "mask": 16
+             } ],
+             }
+           }'
+        status_code: 201
       register: create_device_result
     - name: Print create device result
       debug:
