@@ -10,27 +10,39 @@
         method: POST
         validate_certs: no
         headers:
-          Accept: "application/json"
           Content-Type: "application/json"
+          Accept: "application/json"
+          ERS-Media-Type : policy.authorizationprofile.1.2
+        body_format: json
         body:
-          AuthorizationProfile:
-            id: ""
-            name: "test"
-            advancedAttributes:
-              - leftHandSideDictionaryAttribue:
-                  AdvancedAttributeValueType: "AdvancedDictionaryAttribute"
-                  dictionaryName: "Cisco"
-                  attributeName: "cisco-call-filter"
-                rightHandSideAttribueValue:
-                  AdvancedAttributeValueType: "AttributeValue"
-                  value: "23"
-            accessType: "ACCESS_ACCEPT"
-            authzProfileType: "SWITCH"
-            reauth:
-              timer: 1800
-              connectivity: "RADIUS_REQUEST"
-      register: created_profile
+         {
+            "AuthorizationProfile": {
+              "id": "",
+              "name": "Ansible_Auth",
+             "advancedAttributes": [
+                      {
+              "leftHandSideDictionaryAttribue": {
+              "AdvancedAttributeValueType": "AdvancedDictionaryAttribute",
+              "dictionaryName": "Cisco",
+              "attributeName": "cisco-call-filter"
+                                },
+              "rightHandSideAttribueValue": {
+               "AdvancedAttributeValueType": "AttributeValue",
+               "value": "23"
+                       }
+                }
+                ],
+            "accessType": "ACCESS_ACCEPT",
+            "authzProfileType": "SWITCH",
+            "reauth": {
+            "timer": 1800,
+            "connectivity": "RADIUS_REQUEST"
+                 }
+                }
+          }
+        status_code: 201
+      register: created_Authprofile
 
-    - name: Display created profile
+    - name: Display created Authorized profile
       debug:
-        var: created_profile.json
+        var: created_Authprofile.json
