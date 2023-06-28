@@ -1,0 +1,21 @@
+---
+- name: Generate ISE policy sets
+  hosts: webservers
+  connection : httpapi
+  become: false
+  gather_facts: no
+  vars:
+    credentials: "admin:Cisc0123_"
+  tasks:
+    - name: Get policy sets
+      ansible.builtin.uri:
+       url: "https://admin:Cisc0123_@150.1.7.111:9060/ers/config/authorizationpolicyset"
+       method: GET
+       validate_certs: no
+       headers:
+          Accept: "application/json"
+      register: Policy
+
+    - name: Display Devices
+      debug:
+        var: Policy.json
