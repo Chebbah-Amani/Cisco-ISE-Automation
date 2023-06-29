@@ -20,6 +20,7 @@
               "id": "",
               "vlanId": "305",
               "name": "Ansible_Auth",
+              "description": "Authorized Profile for VLAN 305 created using ansible ",
               "advancedAttributes": [
                       {
               "leftHandSideDictionaryAttribue": {
