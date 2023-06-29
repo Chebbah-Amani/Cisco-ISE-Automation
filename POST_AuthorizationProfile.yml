@@ -1,3 +1,4 @@
+---
 - name: POST Authorized Profile
   hosts: webservers
   connection: httpapi
