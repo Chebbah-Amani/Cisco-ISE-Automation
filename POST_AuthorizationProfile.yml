@@ -19,7 +19,6 @@
          {
             "AuthorizationProfile": {
               "id": "",
-              "vlanId": "305",
               "name": "Auth_SW4",
               "description": "Authorized Profile for VLAN 305 created using ansible ",
               "advancedAttributes": [
