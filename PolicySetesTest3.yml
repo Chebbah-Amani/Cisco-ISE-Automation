@@ -1,7 +1,9 @@
 ---
 - name: Configure Authentication and Authorization for Switch
-  hosts: switches
-  gather_facts: false
+  hosts: webservers
+  connection : httpapi
+  become: false
+  gather_facts: no
 
   tasks:
     - name: Set wired_802.1X condition
