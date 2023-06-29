@@ -65,7 +65,7 @@
           - no shut
         prompt: '#'
       register: config_result
-      when: "'Auth_SW4_Dot1x' in info.authentication and 'wired_802.1X' in info.conditions"
+      
 
     - name: Configure Authorization for Switch
       ios_command:
