@@ -75,7 +75,7 @@
           - aaa authorization commands 15 default group PFE_AD:ExternalGroups if-authenticated
         prompt: '#'
       register: config_result
-      when: "'PFE_AD:ExternalGroups' in info.authorization"
+     
 
     - name: Configure Authorization profile
       ios_command:
