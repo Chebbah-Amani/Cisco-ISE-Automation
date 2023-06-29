@@ -18,8 +18,9 @@
          {
             "AuthorizationProfile": {
               "id": "",
+              "vlanId": "305",
               "name": "Ansible_Auth",
-             "advancedAttributes": [
+              "advancedAttributes": [
                       {
               "leftHandSideDictionaryAttribue": {
               "AdvancedAttributeValueType": "AdvancedDictionaryAttribute",
@@ -38,6 +39,7 @@
             "timer": 1800,
             "connectivity": "RADIUS_REQUEST"
                  }
+           
                 }
           }
         status_code: 201
