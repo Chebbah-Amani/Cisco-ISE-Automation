@@ -1,9 +1,16 @@
----
 - name: Configure Authentication and Authorization for Switch
   hosts: webservers
-  connection : httpapi
+  connection: httpapi
   become: false
   gather_facts: no
+
+  vars:
+    radius_server: 150.1.7.111
+    radius_key: Cisc0123_
+    interface: eth2  # Replace with the actual interface name
+    fail_vlan: 1  # Replace with the appropriate VLAN number
+    guest_vlan: 305  # Replace with the appropriate VLAN number
+    auth_session: dot1x
 
   tasks:
     - name: Set wired_802.1X condition
@@ -73,15 +80,4 @@
     - name: Configure Authorization profile
       ios_command:
         commands:
-          - aaa authorization exec default group PFE_AD:ExternalGroups if-authenticated
-          - aaa authorization commands 1 default group PFE_AD:ExternalGroups if-authenticated
-          - aaa authorization commands 15 default group PFE_AD:ExternalGroups if-authenticated
-          - aaa authorization config-commands
-          - aaa authorization exec console
-          - aaa authorization commands 1 console
-          - aaa authorization commands 15 console
-          - aaa authorization network default group PFE_AD:ExternalGroups if-authenticated
-          - aaa authorization config-commands
-          - aaa authorization exec console
-         
-
+          - aaa authorization exec default group
