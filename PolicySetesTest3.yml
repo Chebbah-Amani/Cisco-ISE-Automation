@@ -1,1 +1,85 @@
+---
+- name: Configure Authentication and Authorization for Switch
+  hosts: switches
+  gather_facts: false
+
+  tasks:
+    - name: Set wired_802.1X condition
+      ios_command:
+        commands:
+          - radius server ISE
+          - address ipv4 {{ radius_server }}
+          - key {{ radius_key }}
+          - aaa new-model
+          - aaa authentication dot1x default group radius
+          - dot1x system-auth-control
+          - dot1x pae authenticator
+          - interface {{ interface }}
+          - dot1x port-control auto
+          - dot1x host-mode multi-auth
+          - dot1x auth-fail vlan {{ fail_vlan }}
+          - dot1x guest-vlan {{ guest_vlan }}
+          - dot1x reauthentication
+          - dot1x timeout reauth-period 60
+          - dot1x max-req 3
+          - dot1x max-reauth-req 3
+          - dot1x supplicant force-multicast
+          - dot1x auth-session {{ auth_session }}
+          - dot1x guest-vlan {{ guest_vlan }}
+          - no shut
+        prompt: '#'
+      register: config_result
+      when: "'wired_802.1X' in info.conditions"
+
+    - name: Create Auth_SW4_Dot1x authentication profile
+      ios_command:
+        commands:
+          - radius server ISE
+          - address ipv4 {{ radius_server }}
+          - key {{ radius_key }}
+          - aaa new-model
+          - aaa authentication dot1x default group radius
+          - dot1x system-auth-control
+          - dot1x pae authenticator
+          - interface {{ interface }}
+          - dot1x port-control auto
+          - dot1x host-mode multi-auth
+          - dot1x auth-fail vlan {{ fail_vlan }}
+          - dot1x guest-vlan {{ guest_vlan }}
+          - dot1x reauthentication
+          - dot1x timeout reauth-period 60
+          - dot1x max-req 3
+          - dot1x max-reauth-req 3
+          - dot1x supplicant force-multicast
+          - dot1x auth-session {{ auth_session }}
+          - dot1x guest-vlan {{ guest_vlan }}
+          - no shut
+        prompt: '#'
+      register: config_result
+      when: "'Auth_SW4_Dot1x' in info.authentication and 'wired_802.1X' in info.conditions"
+
+    - name: Configure Authorization for Switch
+      ios_command:
+        commands:
+          - aaa authorization exec default group PFE_AD:ExternalGroups if-authenticated
+          - aaa authorization commands 1 default group PFE_AD:ExternalGroups if-authenticated
+          - aaa authorization commands 15 default group PFE_AD:ExternalGroups if-authenticated
+        prompt: '#'
+      register: config_result
+      when: "'PFE_AD:ExternalGroups' in info.authorization"
+
+    - name: Configure Authorization profile
+      ios_command:
+        commands:
+          - aaa authorization exec default group PFE_AD:ExternalGroups if-authenticated
+          - aaa authorization commands 1 default group PFE_AD:ExternalGroups if-authenticated
+          - aaa authorization commands 15 default group PFE_AD:ExternalGroups if-authenticated
+          - aaa authorization config-commands
+          - aaa authorization exec console
+          - aaa authorization commands 1 console
+          - aaa authorization commands 15 console
+          - aaa authorization network default group PFE_AD:ExternalGroups if-authenticated
+          - aaa authorization config-commands
+          - aaa authorization exec console
+         
 
